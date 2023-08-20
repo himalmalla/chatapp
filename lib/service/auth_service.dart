@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:chatapp/commons/firebase_instances.dart';
+import 'package:chatapp/common_provider/firebase_instances.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

@@ -1,0 +1,3 @@
+class SnackShow {
+  static showSuccess() {}
+}
