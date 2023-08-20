@@ -16,10 +16,10 @@ class CommonState with _$CommonState{
 
 factory CommonState.empty(){
   return CommonState(
-      isLoad: isLoad,
-      isError: isError,
-      isSuccess: isSuccess,
-      errtext: errtext
+      isLoad: false,
+      isError: false,
+      isSuccess: false,
+      errtext: ''
   );
 }
 
