@@ -5,7 +5,7 @@ import 'package:image_picker/image_picker.dart';
 final loginProvider = StateProvider.autoDispose<bool>((ref) => true);
 final passHide = StateProvider.autoDispose((ref) => true);
 
-final image = StateNotifierProvider.autoDispose<ImageProvider, XFile?>(
+final imageProvider = StateNotifierProvider.autoDispose<ImageProvider, XFile?>(
     (ref) => ImageProvider(null));
 
 class ImageProvider extends StateNotifier<XFile?> {

@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:chatapp/common_provider/other_provider.dart';
+import 'package:chatapp/common_widgets/snack_shows.dart';
 import 'package:chatapp/constants/sizes.dart';
 import 'package:chatapp/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
@@ -17,13 +19,17 @@ class Authpage extends ConsumerWidget {
   Widget build(BuildContext context, ref) {
     ref.listen(authProvider, (previous, next) {
       if (next.isError) {
-      } else if (next.isSuccess) {}
+        SnackShow.showError(next.errtext);
+      } else if (next.isSuccess) {
+        SnackShow.showError('success');
+      }
     });
 
     final auth = ref.watch(authProvider);
     final isLogin = ref.watch(loginProvider);
     final mod = ref.watch(mode);
     final pwdHide = ref.watch(passHide);
+    final image = ref.watch(imageProvider);
 
     return Scaffold(
       body: SafeArea(
@@ -107,16 +113,26 @@ class Authpage extends ConsumerWidget {
                   obscureText: pwdHide ? true : false,
                   controller: passController,
                 ),
-                gapH16,
+                gapH24,
                 if (!isLogin)
                   InkWell(
                     onTap: () {},
-                    child: Container(),
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration:
+                          BoxDecoration(border: Border.all(color: Colors.grey)),
+                      child: image == null
+                          ? Text('Please select image')
+                          : Image.file(File(image.path)),
+                    ),
                   ),
+                gapH16,
                 ElevatedButton(
                   onPressed: auth.isLoad
                       ? null
                       : () {
+                          FocusScope.of(context).unfocus();
                           _form.currentState!.save();
                           if (_form.currentState!.validate()) {
                             ref.read(authProvider.notifier).userLogin(
@@ -131,6 +147,20 @@ class Authpage extends ConsumerWidget {
                       ? const CircularProgressIndicator()
                       : const Text('Submit'),
                 ),
+                Row(
+                  children: [
+                    Text(isLogin
+                        ? 'Don\'t have an account'
+                        : 'Already have an account'),
+                    TextButton(
+                      onPressed: () {
+                        ref.read(loginProvider.notifier).state =
+                            !ref.read(loginProvider.notifier).state;
+                      },
+                      child: Text(isLogin ? 'Sign Up' : 'Login'),
+                    )
+                  ],
+                )
               ],
             ),
           ),

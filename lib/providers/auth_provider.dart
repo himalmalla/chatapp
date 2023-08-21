@@ -15,9 +15,11 @@ class AuthProvider extends StateNotifier<CommonState> {
         isLoad: true, errtext: '', isError: false, isSuccess: false);
     final response = await service.userLogin(email: email, password: password);
     response.fold((l) {
-      (isLoad: false, errtext: l, isError: true, isSuccess: false);
+      state = state.copyWith(
+          isLoad: false, errtext: l, isError: true, isSuccess: false);
     }, (r) {
-      (isLoad: false, errtext: '', isError: false, isSuccess: r);
+      state = state.copyWith(
+          isLoad: false, errtext: '', isError: false, isSuccess: r);
     });
   }
 }
