@@ -1,5 +1,6 @@
 import 'package:chatapp/models/common_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import '../service/auth_service.dart';
 
 final authProvider = StateNotifierProvider<AuthProvider, CommonState>(
@@ -13,6 +14,24 @@ class AuthProvider extends StateNotifier<CommonState> {
       {required String email, required String password}) async {
     state = state.copyWith(
         isLoad: true, errtext: '', isError: false, isSuccess: false);
+    final response = await service.userLogin(email: email, password: password);
+    response.fold((l) {
+      state = state.copyWith(
+          isLoad: false, errtext: l, isError: true, isSuccess: false);
+    }, (r) {
+      state = state.copyWith(
+          isLoad: false, errtext: '', isError: false, isSuccess: r);
+    });
+  }
+
+  Future<void> userSignUp(
+      {required String email,
+      required String password,
+      required String userName,
+      required XFile image}) async {
+    state = state.copyWith(
+        isLoad: true, errtext: '', isError: false, isSuccess: false);
+
     final response = await service.userLogin(email: email, password: password);
     response.fold((l) {
       state = state.copyWith(

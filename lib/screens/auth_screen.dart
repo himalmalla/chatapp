@@ -135,10 +135,22 @@ class Authpage extends ConsumerWidget {
                           FocusScope.of(context).unfocus();
                           _form.currentState!.save();
                           if (_form.currentState!.validate()) {
-                            ref.read(authProvider.notifier).userLogin(
-                                  email: mailController.text.trim(),
-                                  password: passController.text.trim(),
-                                );
+                            if (isLogin) {
+                              ref.read(authProvider.notifier).userLogin(
+                                    email: mailController.text.trim(),
+                                    password: passController.text.trim(),
+                                  );
+                            } else {
+                              if (image == null) {
+                                SnackShow.showError('please select an image');
+                              } else {
+                                ref.read(authProvider.notifier).userSignUp(
+                                    email: mailController.text.trim(),
+                                    password: passController.text.trim(),
+                                    userName: userNameController.text.trim(),
+                                    image: image);
+                              }
+                            }
                           } else {
                             ref.read(mode.notifier).change();
                           }
