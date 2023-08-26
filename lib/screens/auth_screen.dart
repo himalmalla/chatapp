@@ -6,6 +6,7 @@ import 'package:chatapp/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 class Authpage extends ConsumerWidget {
   Authpage({super.key});
@@ -21,7 +22,7 @@ class Authpage extends ConsumerWidget {
       if (next.isError) {
         SnackShow.showError(next.errtext);
       } else if (next.isSuccess) {
-        SnackShow.showError('success');
+        SnackShow.showSuccess('Successfully logged in');
       }
     });
 
@@ -116,7 +117,30 @@ class Authpage extends ConsumerWidget {
                 gapH24,
                 if (!isLogin)
                   InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Get.defaultDialog(
+                          title: 'Choose From',
+                          content: Column(
+                            children: [
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    ref
+                                        .read(imageProvider.notifier)
+                                        .pickImage(true);
+                                  },
+                                  child: const Text('Camera')),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    ref
+                                        .read(imageProvider.notifier)
+                                        .pickImage(false);
+                                  },
+                                  child: Text('Gallery'))
+                            ],
+                          ));
+                    },
                     child: Container(
                       height: 100,
                       width: 100,

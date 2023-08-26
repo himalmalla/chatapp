@@ -1,4 +1,5 @@
 import 'package:chatapp/screens/auth_screen.dart';
+import 'package:chatapp/screens/status_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +27,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData.light(),
-      home: Authpage(),
+      home: StatusPage(),
     );
   }
 }
