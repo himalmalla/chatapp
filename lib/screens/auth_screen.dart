@@ -119,27 +119,24 @@ class Authpage extends ConsumerWidget {
                   InkWell(
                     onTap: () {
                       Get.defaultDialog(
-                          title: 'Choose From',
-                          content: Column(
-                            children: [
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    ref
-                                        .read(imageProvider.notifier)
-                                        .pickImage(true);
-                                  },
-                                  child: const Text('Camera')),
-                              TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                    ref
-                                        .read(imageProvider.notifier)
-                                        .pickImage(false);
-                                  },
-                                  child: Text('Gallery'))
-                            ],
-                          ));
+                        title: 'Choose From',
+                        content: Column(
+                          children: [
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  ref.read(imageProvider.notifier).pickImage(true);
+                                },
+                                child: const Text('Camera')),
+                            TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  ref.read(imageProvider.notifier).pickImage(false);
+                                },
+                                child: const Text('Gallery'))
+                          ],
+                        ),
+                      );
                     },
                     child: Container(
                       height: 100,
@@ -147,7 +144,7 @@ class Authpage extends ConsumerWidget {
                       decoration:
                           BoxDecoration(border: Border.all(color: Colors.grey)),
                       child: image == null
-                          ? Text('Please select image')
+                          ? const Text('Please select image')
                           : Image.file(File(image.path)),
                     ),
                   ),

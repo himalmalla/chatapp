@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:chatapp/common_provider/firebase_instances.dart';
 import 'package:chatapp/models/common_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +7,8 @@ import '../service/auth_service.dart';
 final authProvider = StateNotifierProvider<AuthProvider, CommonState>(
     (ref) => AuthProvider(CommonState.empty(), ref.watch(authService)));
 
-final userStream = StreamProvider((ref) => ref.read(auth).authStateChanges());
+final userStream =
+    StreamProvider.autoDispose((ref) => ref.read(auth).authStateChanges());
 
 class AuthProvider extends StateNotifier<CommonState> {
   final AuthService service;

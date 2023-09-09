@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:chatapp/common_provider/firebase_instances.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,12 +11,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
+final usersStream =
+    StreamProvider.autoDispose((ref) => ref.read(chatCore).users());
+final singleUser =
+    StreamProvider.family((ref, String id) => AuthService.getUsers(id));
+
 final authService = Provider(
   (ref) => AuthService(
-      auth: ref.watch(auth),
-      messaging: ref.watch(msg),
-      chatCore: ref.watch(chatCore),
-      storage: ref.watch(storage)),
+    auth: ref.watch(auth),
+    messaging: ref.watch(msg),
+    chatCore: ref.watch(chatCore),
+    storage: ref.watch(storage),
+  ),
 );
 
 class AuthService {
@@ -23,18 +31,44 @@ class AuthService {
   final FirebaseChatCore chatCore;
   final FirebaseStorage storage;
 
-  AuthService(
-      {required this.auth,
-      required this.messaging,
-      required this.chatCore,
-      required this.storage});
+  AuthService({
+    required this.auth,
+    required this.messaging,
+    required this.chatCore,
+    required this.storage,
+  });
+
+  static final userDb = FirebaseFirestore.instance.collection('users');
+
+  static Stream<types.User> getUsers(String userId) {
+    return userDb.doc(userId).snapshots().map((event) {
+      final json = event.data() as Map<String, dynamic>;
+      return types.User(
+          id: event.id,
+          firstName: json['firstName'],
+          metadata: {
+            'email': json['metadata']['email'],
+            'token': json['metadata']['token']
+          },
+          imageUrl: json['imageUrl']);
+    });
+
+    // return userDb.snapshots().map((event) {
+    //   return event.docs.map((e) {
+    //     return types.User();
+    //   }).toList();
+    // });
+  }
 
   Future<Either<String, bool>> userLogin(
       {required String email, required String password}) async {
     try {
-      // final token = await messaging.getToken();
+      final token = await messaging.getToken();
       final response = await auth.signInWithEmailAndPassword(
           email: email, password: password);
+      await userDb.doc(response.user!.uid).update({
+        'metadata': {'email': email, 'token': token}
+      });
 
       return Right(true);
     } on FirebaseAuthException catch (err) {
