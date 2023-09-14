@@ -125,13 +125,17 @@ class Authpage extends ConsumerWidget {
                             TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
-                                  ref.read(imageProvider.notifier).pickImage(true);
+                                  ref
+                                      .read(imageProvider.notifier)
+                                      .pickImage(true);
                                 },
                                 child: const Text('Camera')),
                             TextButton(
                                 onPressed: () {
                                   Navigator.of(context).pop();
-                                  ref.read(imageProvider.notifier).pickImage(false);
+                                  ref
+                                      .read(imageProvider.notifier)
+                                      .pickImage(false);
                                 },
                                 child: const Text('Gallery'))
                           ],
